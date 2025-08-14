@@ -186,7 +186,9 @@ function registerEvents(bot, discordClient, aiService) {
                         playersCount: Object.keys(bot.players).length
                     };
 
-                    const response = await aiService.generateResponse(username, message, context);
+                    // Remove the dot prefix before sending to AI
+                    const cleanMessage = message.startsWith('.') ? message.substring(1).trim() : message;
+                    const response = await aiService.generateResponse(username, cleanMessage, context);
                     
                     if (response) {
                         // Small delay to make it feel more natural

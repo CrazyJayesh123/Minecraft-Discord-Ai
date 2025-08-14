@@ -8,7 +8,7 @@ This is a Node.js-based AI-powered Minecraft bot that bridges Discord and Minecr
 
 Preferred communication style: Simple, everyday language.
 AI behavior preferences:
-- AI should only respond when directly mentioned with "ai" or "bot" keywords
+- AI should only respond when message starts with "." prefix (not to "ai" or "bot" keywords)
 - AI should give direct answers without showing thinking process
 - AI should answer all types of questions, not just Minecraft-related ones
 - Prefers clean project structure without unnecessary deployment/GitHub files
@@ -34,6 +34,10 @@ AI behavior preferences:
   - Reduced view distance and enabled physics optimization
   - Added specific error handling for ENOTFOUND, ECONNREFUSED, and ETIMEDOUT
   - Implemented connection timeout with automatic retry using new usernames
+- **Fixed AI response behavior**:
+  - Changed AI trigger from "bot"/"ai" keywords to "." prefix only
+  - AI now only responds when messages start with a dot (e.g., ".hello" or ".help")
+  - Removes the dot prefix before processing the message for cleaner AI responses
 
 ## System Architecture
 

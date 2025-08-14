@@ -3,6 +3,7 @@ services:
     name: minecraft-discord-bot
     env: node
     plan: starter
+    runtime: node
     buildCommand: npm install
     startCommand: node index.js
     healthCheckPath: /health
@@ -11,6 +12,10 @@ services:
         value: production
       - key: PORT
         value: 5000
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=2048"
   - type: pserv
     name: minecraft-discord-bot-db
     env: postgresql

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Minecraft Bot Status - LifeSteal029</title>
+    <link rel="stylesheet" href="status.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-robot"></i> AI Minecraft Bot</h1>
+            <p class="server-info">LifeSteal029.aternos.me:48688</p>
+        </header>
+
+        <div class="status-grid">
+            <!-- Minecraft Status -->
+            <div class="status-card" id="minecraft-card">
+                <div class="card-header">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>Minecraft Connection</h3>
+                </div>
+                <div class="status-indicator" id="mc-status">
+                    <span class="dot offline"></span>
+                    <span class="text">Checking...</span>
+                </div>
+                <div class="details" id="mc-details">
+                    <div class="detail-item">
+                        <span class="label">Username:</span>
+                        <span class="value" id="mc-username">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Health:</span>
+                        <span class="value" id="mc-health">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Food:</span>
+                        <span class="value" id="mc-food">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Position:</span>
+                        <span class="value" id="mc-position">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discord Status -->
+            <div class="status-card" id="discord-card">
+                <div class="card-header">
+                    <i class="fab fa-discord"></i>
+                    <h3>Discord Connection</h3>
+                </div>
+                <div class="status-indicator" id="discord-status">
+                    <span class="dot offline"></span>
+                    <span class="text">Checking...</span>
+                </div>
+                <div class="details" id="discord-details">
+                    <div class="detail-item">
+                        <span class="label">Bot User:</span>
+                        <span class="value" id="discord-username">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="status-card" id="system-card">
+                <div class="card-header">
+                    <i class="fas fa-server"></i>
+                    <h3>System Status</h3>
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="label">Uptime:</span>
+                        <span class="value" id="system-uptime">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Last Update:</span>
+                        <span class="value" id="last-update">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Status -->
+            <div class="status-card" id="ai-card">
+                <div class="card-header">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI Service</h3>
+                </div>
+                <div class="status-indicator" id="ai-status">
+                    <span class="dot offline"></span>
+                    <span class="text">AI Ready</span>
+                </div>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="label">Model:</span>
+                        <span class="value">Together AI Qwen2.5-7B</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Response Rate:</span>
+                        <span class="value">On Mention Only</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Feedback Analytics -->
+            <div class="status-card" id="feedback-card">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>AI Feedback Analytics</h3>
+                </div>
+                <div class="details" id="feedback-details">
+                    <div class="detail-item">
+                        <span class="label">Total Feedback:</span>
+                        <span class="value" id="feedback-total">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Average Rating:</span>
+                        <span class="value" id="feedback-rating">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Most Common:</span>
+                        <span class="value" id="feedback-common">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2><i class="fas fa-star"></i> Bot Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-comments"></i>
+                    <h4>Two-way Chat Bridge</h4>
+                    <p>Messages sync between Discord and Minecraft</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-robot"></i>
+                    <h4>AI Responses</h4>
+                    <p>Smart AI-powered chat responses</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <h4>Auto-Reconnection</h4>
+                    <p>Automatically reconnects when server restarts</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <h4>Survival Behaviors</h4>
+                    <p>Auto-eat, respawn, and health monitoring</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-terminal"></i>
+                    <h4>Discord Commands</h4>
+                    <p>Control bot through Discord slash commands</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>LifeSteal Support</h4>
+                    <p>Optimized for LifeSteal server mechanics</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commands Section -->
+        <div class="commands-section">
+            <h2><i class="fas fa-list"></i> Available Discord Commands</h2>
+            <div class="commands-grid">
+                <div class="command-group">
+                    <h4>Status Commands</h4>
+                    <div class="command-item">
+                        <code>/mcstatus</code>
+                        <span>Bot status overview</span>
+                    </div>
+                    <div class="command-item">
+                        <code>/mcplayers</code>
+                        <span>List online players</span>
+                    </div>
+                    <div class="command-item">
+                        <code>/mcposition</code>
+                        <span>Bot coordinates</span>
+                    </div>
+                </div>
+                <div class="command-group">
+                    <h4>Control Commands</h4>
+                    <div class="command-item">
+                        <code>/mcchat</code>
+                        <span>Send message to Minecraft</span>
+                    </div>
+                    <div class="command-item">
+                        <code>/mccommand</code>
+                        <span>AI natural language commands</span>
+                    </div>
+                    <div class="command-item">
+                        <code>/mcrespawn</code>
+                        <span>Force bot respawn</span>
+                    </div>
+                </div>
+                <div class="command-group">
+                    <h4>AI Commands</h4>
+                    <div class="command-item">
+                        <code>/ai</code>
+                        <span>Chat with AI directly</span>
+                    </div>
+                    <div class="command-item">
+                        <code>/aifeedback</code>
+                        <span>Rate AI responses (1-5 stars)</span>
+                    </div>
+                    <div class="command-item">
+                        <code>/aifeedbackstats</code>
+                        <span>View feedback analytics</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>AI Minecraft Bot for LifeSteal029 Server | Powered by Mineflayer & Google Gemini</p>
+        </footer>
+    </div>
+
+    <script src="status.js"></script>
+</body>
+</html>

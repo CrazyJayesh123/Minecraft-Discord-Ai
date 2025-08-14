@@ -20,7 +20,7 @@
     "drizzle-orm": "^0.44.3",
     "express": "^5.1.0",
     "mineflayer": "^4.31.0",
-    "mineflayer-auto-eat": "^3.3.6",
+    "mineflayer-auto-eat": "^5.0.3",
     "mineflayer-pathfinder": "^2.4.5",
     "node-cron": "^4.2.1",
     "openai": "^5.10.2",

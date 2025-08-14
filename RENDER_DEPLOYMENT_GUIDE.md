@@ -33,13 +33,6 @@ This guide shows you how to deploy your AI Minecraft Discord Bot to Render with 
    - **Start Command**: `node index.js`
    - **Plan**: Free (or paid for always-on)
 
-⚠️ **CRITICAL NODE.JS VERSION FIX**: 
-Add these environment variables to fix the mineflayer compatibility and ES Module issues:
-- **NODE_VERSION**: `22.11.0`
-- **NPM_CONFIG_PRODUCTION**: `false`
-
-This ensures Render uses Node.js 22+ and proper CommonJS module handling.
-
 ## Step 4: Set Environment Variables
 In your web service settings, add these environment variables:
 
@@ -60,11 +53,6 @@ MINECRAFT_USERNAME=AIBot_LS029
 
 # Server Configuration
 NODE_ENV=production
-
-# CRITICAL: Fix for ES Module Error on Render
-NODE_VERSION=22.11.0
-NPM_CONFIG_PRODUCTION=false
-NODE_OPTIONS=--no-warnings
 PORT=5000
 ```
 
@@ -112,17 +100,6 @@ After deployment completes:
 - Verify all environment variables are set correctly
 - Check that Discord token is valid
 - Ensure database URL is correct
-
-**❌ ES Module Error: "require() of ES Module not supported":**
-- Add `NODE_VERSION=22.11.0` environment variable
-- Add `NPM_CONFIG_PRODUCTION=false` environment variable
-- Add `NODE_OPTIONS=--no-warnings` environment variable
-- Change build command to: `npm ci --only=production`
-- This fixes CommonJS module compatibility issues with mineflayer plugins
-
-**❌ Engine Warnings about Node.js version:**
-- These warnings are normal and don't affect deployment
-- Ensure NODE_VERSION=22.11.0 is set in environment variables
 
 **Database connection fails:**
 - Verify DATABASE_URL format

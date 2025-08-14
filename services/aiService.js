@@ -123,8 +123,11 @@ Remember: You're a helpful AI that happens to be connected to a Minecraft server
     }
 
     async shouldRespond(message, username) {
-        // Only respond if message starts with a dot (.) prefix
-        if (message.startsWith('.')) {
+        // Only respond if directly mentioned with "ai" or "bot"
+        const botMentions = ['bot', 'ai'];
+        const lowerMessage = message.toLowerCase();
+        
+        if (botMentions.some(mention => lowerMessage.includes(mention))) {
             return true;
         }
 

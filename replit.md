@@ -8,7 +8,7 @@ This is a Node.js-based AI-powered Minecraft bot that bridges Discord and Minecr
 
 Preferred communication style: Simple, everyday language.
 AI behavior preferences:
-- AI should only respond when message starts with "." prefix (not to "ai" or "bot" keywords)
+- AI should only respond when directly mentioned with "ai" or "bot" keywords
 - AI should give direct answers without showing thinking process
 - AI should answer all types of questions, not just Minecraft-related ones
 - Prefers clean project structure without unnecessary deployment/GitHub files
@@ -22,33 +22,6 @@ AI behavior preferences:
 - Configured Render deployment with PostgreSQL database integration
 - Fixed Discord command registration with improved error handling and validation
 - Successfully deployed to Render with full database support and all 27 commands working
-- **Implemented comprehensive real-time Minecraft event notifications in Discord (August 14, 2025)**:
-  - Added 15+ new event types with rich Discord embeds including weather changes, day/night cycle, mining significant blocks, experience gains, rare entity spawns, achievements, health/food alerts, combat actions, valuable item collection, spawn point setting, inventory management, and portal usage
-  - Enhanced existing player join/leave, death, kick, error, and disconnection notifications with detailed embed styling and comprehensive information
-  - Created unified notification helper function for consistent Discord embed formatting across all events
-  - Fixed deprecated entity.mobType usage to use entity.displayName instead for better compatibility
-  - Successfully tested on both Replit and Render deployments with full functionality
-
-## Latest Fixes (August 14, 2025)
-- **Fixed frequent disconnections on Render deployment** by addressing duplicate login issues:
-  - Implemented unique username generation with timestamps to prevent duplicate login errors
-  - Increased connection timeouts for Aternos servers (120s check interval, 60s packet timeout)
-  - Enhanced reconnection delays (15s base delay, up to 50 attempts)
-  - Added Node.js 22+ version enforcement for mineflayer compatibility
-- **Improved Aternos server compatibility**:
-  - Disabled keep-alive to prevent timeout issues
-  - Reduced view distance and enabled physics optimization
-  - Added specific error handling for ENOTFOUND, ECONNREFUSED, and ETIMEDOUT
-  - Implemented connection timeout with automatic retry using new usernames
-- **Fixed AI response behavior**:
-  - Changed AI trigger from "bot"/"ai" keywords to "." prefix only
-  - AI now only responds when messages start with a dot (e.g., ".hello" or ".help")
-  - Removes the dot prefix before processing the message for cleaner AI responses
-- **Resolved ES Module deployment errors**:
-  - Downgraded mineflayer-auto-eat to v3.3.1 for CommonJS compatibility
-  - Added robust plugin loading with fallback error handling
-  - Enhanced Render deployment configuration with NODE_OPTIONS and proper build commands
-  - Fixed all CommonJS/ES Module conflicts for stable Render deployment
 
 ## System Architecture
 

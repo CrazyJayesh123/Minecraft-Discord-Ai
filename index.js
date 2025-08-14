@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 const mineflayer = require('mineflayer');
-const pathfinder = require('mineflayer-pathfinder').pathfinder;
+const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const autoeat = require('mineflayer-auto-eat');
 const express = require('express');
 const path = require('path');
@@ -166,14 +166,19 @@ async function initializeMinecraft() {
         // Load plugins after spawn with better error handling
         minecraftBot.once('spawn', () => {
             try {
-                // Check if plugins are already loaded to prevent duplicate loading
+                // Load pathfinder plugin
                 if (!minecraftBot.pathfinder) {
                     minecraftBot.loadPlugin(pathfinder);
+                    logger.info('Pathfinder plugin loaded successfully');
                 }
+                
+                // Load auto-eat plugin
                 if (!minecraftBot.autoEat) {
                     minecraftBot.loadPlugin(autoeat);
+                    logger.info('Auto-eat plugin loaded successfully');
                 }
-                logger.info('Plugins loaded successfully');
+                
+                logger.info('All plugins loaded successfully');
             } catch (pluginError) {
                 logger.warn('Plugin loading error:', {
                     message: pluginError.message,
@@ -181,6 +186,7 @@ async function initializeMinecraft() {
                     actual: pluginError.actual,
                     expected: pluginError.expected
                 });
+                // Continue without plugins rather than crashing
             }
         });
 

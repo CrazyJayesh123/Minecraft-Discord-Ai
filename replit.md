@@ -23,6 +23,18 @@ AI behavior preferences:
 - Fixed Discord command registration with improved error handling and validation
 - Successfully deployed to Render with full database support and all 27 commands working
 
+## Latest Fixes (August 14, 2025)
+- **Fixed frequent disconnections on Render deployment** by addressing duplicate login issues:
+  - Implemented unique username generation with timestamps to prevent duplicate login errors
+  - Increased connection timeouts for Aternos servers (120s check interval, 60s packet timeout)
+  - Enhanced reconnection delays (15s base delay, up to 50 attempts)
+  - Added Node.js 22+ version enforcement for mineflayer compatibility
+- **Improved Aternos server compatibility**:
+  - Disabled keep-alive to prevent timeout issues
+  - Reduced view distance and enabled physics optimization
+  - Added specific error handling for ENOTFOUND, ECONNREFUSED, and ETIMEDOUT
+  - Implemented connection timeout with automatic retry using new usernames
+
 ## System Architecture
 
 The application follows a modular event-driven architecture with clear separation of concerns:

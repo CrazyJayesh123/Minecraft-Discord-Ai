@@ -33,6 +33,12 @@ This guide shows you how to deploy your AI Minecraft Discord Bot to Render with 
    - **Start Command**: `node index.js`
    - **Plan**: Free (or paid for always-on)
 
+⚠️ **CRITICAL NODE.JS VERSION FIX**: 
+Add this environment variable to fix the mineflayer compatibility issue:
+- **NODE_VERSION**: `22.11.0`
+
+This ensures Render uses Node.js 22+ which is required for mineflayer 4.31.0+
+
 ## Step 4: Set Environment Variables
 In your web service settings, add these environment variables:
 

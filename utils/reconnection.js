@@ -33,14 +33,17 @@ class ReconnectionManager {
         bot.on('kicked', (reason) => {
             logger.warn(`Bot was kicked: ${reason}`);
             
-            // Check if kicked for illegal characters (message formatting issue)
             const reasonStr = JSON.stringify(reason);
+            
+            // Check for specific kick reasons
             if (reasonStr.includes('illegal_characters')) {
                 logger.warn('Bot kicked for illegal characters - likely message formatting issue');
+            } else if (reasonStr.includes('duplicate_login')) {
+                logger.warn('Bot kicked for duplicate login - will use new username on reconnect');
             }
             
-            // Wait longer if kicked (might be temporary ban)
-            const kickDelay = config.RECONNECT_DELAY * 3;
+            // Longer delay for kicks - especially for Aternos servers
+            const kickDelay = config.RECONNECT_DELAY * 5; // 75 seconds with new default
             setTimeout(() => {
                 if (!this.isReconnecting) {
                     this.startReconnection(createBotFunction);

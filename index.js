@@ -111,32 +111,57 @@ async function initializeMinecraft() {
     try {
         logger.info(`Attempting to connect to Minecraft server: ${config.MINECRAFT_HOST}:${config.MINECRAFT_PORT}`);
         
+        // Generate unique username to prevent duplicate login issues
+        const timestamp = Date.now().toString().slice(-4);
+        const uniqueUsername = `${config.MINECRAFT_USERNAME}_${timestamp}`;
+        
         minecraftBot = mineflayer.createBot({
             host: config.MINECRAFT_HOST,
             port: config.MINECRAFT_PORT,
-            username: config.MINECRAFT_USERNAME,
+            username: uniqueUsername,
             auth: 'offline', // Aternos servers typically use offline mode
             version: '1.20.1', // Set specific version instead of auto-detect
             skipValidation: true, // Skip some validations for better compatibility
             hideErrors: true, // Hide protocol errors to prevent crashes
-            checkTimeoutInterval: 60000, // Increase timeout to 60 seconds
-            packetTimeout: 30000, // Increase packet timeout
+            checkTimeoutInterval: 120000, // Increase timeout to 2 minutes for Aternos
+            packetTimeout: 60000, // Increase packet timeout for slow servers
+            keepAlive: false, // Disable keep-alive to prevent timeout issues
             physicsEnabled: false, // Disable physics to reduce packet processing
-            respawn: true // Auto respawn on death
+            respawn: true, // Auto respawn on death
+            viewDistance: 'tiny', // Reduce view distance for better performance
+            chatLengthLimit: 100 // Limit chat message length
         });
 
-        // Add error handlers before other event handlers
+        // Add comprehensive error handlers before other event handlers
         minecraftBot.on('error', (error) => {
             logger.warn('Minecraft bot error (non-fatal):', error.message);
+            
+            // Handle specific Aternos/connection errors
+            if (error.message.includes('ENOTFOUND') || error.message.includes('ECONNREFUSED')) {
+                logger.warn('Connection error - server may be offline or starting up');
+            } else if (error.message.includes('ETIMEDOUT')) {
+                logger.warn('Connection timeout - server response too slow');
+            }
             // Don't crash on protocol errors
         });
 
         minecraftBot.on('kicked', (reason) => {
             logger.warn('Bot was kicked from server:', reason);
+            
+            // Handle duplicate login specifically
+            const reasonStr = JSON.stringify(reason);
+            if (reasonStr.includes('duplicate_login')) {
+                logger.warn('Duplicate login detected - next connection will use new username');
+            }
         });
 
         minecraftBot.on('end', (reason) => {
             logger.info('Connection ended:', reason);
+            
+            // Log specific end reasons for debugging
+            if (reason && reason.includes('socketClosed')) {
+                logger.info('Socket closed by server - normal for Aternos when inactive');
+            }
         });
 
         // Load plugins after spawn
@@ -155,6 +180,19 @@ async function initializeMinecraft() {
 
         // Auto-reconnection setup
         reconnection.setupAutoReconnect(minecraftBot, initializeMinecraft);
+
+        // Add timeout for initial connection
+        const connectionTimeout = setTimeout(() => {
+            if (!minecraftBot.player) {
+                logger.warn('Connection timeout - retrying with new username');
+                minecraftBot.end();
+            }
+        }, 30000); // 30 second timeout for initial connection
+
+        minecraftBot.once('spawn', () => {
+            clearTimeout(connectionTimeout);
+            logger.info(`Successfully connected with username: ${uniqueUsername}`);
+        });
 
         logger.info('Minecraft bot connection initiated');
         return minecraftBot;

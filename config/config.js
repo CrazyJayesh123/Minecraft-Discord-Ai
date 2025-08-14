@@ -22,9 +22,9 @@ const config = {
     AUTO_EAT: process.env.AUTO_EAT !== 'false',
     COMMAND_PREFIX: process.env.COMMAND_PREFIX || '!',
     
-    // Reconnection Settings
-    RECONNECT_DELAY: parseInt(process.env.RECONNECT_DELAY) || 5000,
-    MAX_RECONNECT_ATTEMPTS: parseInt(process.env.MAX_RECONNECT_ATTEMPTS) || 10,
+    // Reconnection Settings - Optimized for Aternos servers
+    RECONNECT_DELAY: parseInt(process.env.RECONNECT_DELAY) || 15000, // Longer delay for Aternos
+    MAX_RECONNECT_ATTEMPTS: parseInt(process.env.MAX_RECONNECT_ATTEMPTS) || 50, // More attempts
     
     // Rate Limiting
     CHAT_COOLDOWN: parseInt(process.env.CHAT_COOLDOWN) || 2000, // 2 seconds between messages

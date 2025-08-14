@@ -75,13 +75,23 @@ async function initializeDiscord() {
         // Register Discord event handlers
         discordEvents.registerEvents(discordClient, () => minecraftBot, storage);
 
-        // Register slash commands
+        // Register slash commands with error handling
         const rest = new REST({ version: '10' }).setToken(config.DISCORD_TOKEN);
         
-        await rest.put(
-            Routes.applicationCommands(config.DISCORD_CLIENT_ID),
-            { body: discordCommands.commands }
-        );
+        try {
+            logger.info('Registering Discord slash commands...');
+            const commandData = discordCommands.commands.map(command => command.toJSON());
+            
+            await rest.put(
+                Routes.applicationCommands(config.DISCORD_CLIENT_ID),
+                { body: commandData }
+            );
+            
+            logger.info(`Successfully registered ${commandData.length} Discord commands`);
+        } catch (commandError) {
+            logger.error('Failed to register Discord commands:', commandError);
+            // Continue without commands rather than crashing
+        }
 
         // Register command handlers
         discordCommands.registerHandlers(discordClient, () => minecraftBot, storage);

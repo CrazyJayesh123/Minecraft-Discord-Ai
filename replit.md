@@ -38,6 +38,11 @@ AI behavior preferences:
   - Changed AI trigger from "bot"/"ai" keywords to "." prefix only
   - AI now only responds when messages start with a dot (e.g., ".hello" or ".help")
   - Removes the dot prefix before processing the message for cleaner AI responses
+- **Resolved ES Module deployment errors**:
+  - Downgraded mineflayer-auto-eat to v3.3.1 for CommonJS compatibility
+  - Added robust plugin loading with fallback error handling
+  - Enhanced Render deployment configuration with NODE_OPTIONS and proper build commands
+  - Fixed all CommonJS/ES Module conflicts for stable Render deployment
 
 ## System Architecture
 

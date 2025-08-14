@@ -64,6 +64,7 @@ NODE_ENV=production
 # CRITICAL: Fix for ES Module Error on Render
 NODE_VERSION=22.11.0
 NPM_CONFIG_PRODUCTION=false
+NODE_OPTIONS=--no-warnings
 PORT=5000
 ```
 
@@ -115,7 +116,9 @@ After deployment completes:
 **❌ ES Module Error: "require() of ES Module not supported":**
 - Add `NODE_VERSION=22.11.0` environment variable
 - Add `NPM_CONFIG_PRODUCTION=false` environment variable
-- This fixes CommonJS module compatibility issues
+- Add `NODE_OPTIONS=--no-warnings` environment variable
+- Change build command to: `npm ci --only=production`
+- This fixes CommonJS module compatibility issues with mineflayer plugins
 
 **❌ Engine Warnings about Node.js version:**
 - These warnings are normal and don't affect deployment

@@ -168,10 +168,20 @@ async function initializeMinecraft() {
         minecraftBot.once('spawn', () => {
             try {
                 minecraftBot.loadPlugin(pathfinder);
-                minecraftBot.loadPlugin(autoeat);
+                
+                // Load auto-eat plugin with error handling
+                if (autoeat && typeof autoeat === 'function') {
+                    minecraftBot.loadPlugin(autoeat);
+                } else if (autoeat && autoeat.plugin) {
+                    minecraftBot.loadPlugin(autoeat.plugin);
+                } else {
+                    logger.warn('Auto-eat plugin not available - skipping');
+                }
+                
                 logger.info('Plugins loaded successfully');
             } catch (pluginError) {
-                logger.warn('Plugin loading error:', pluginError);
+                logger.warn('Plugin loading error (non-critical):', pluginError.message);
+                // Continue without plugins if they fail to load
             }
         });
 

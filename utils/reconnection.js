@@ -61,7 +61,10 @@ class ReconnectionManager {
     }
 
     startReconnection(createBotFunction) {
-        if (this.isReconnecting) return;
+        if (this.isReconnecting) {
+            logger.info('Reconnection already in progress, skipping...');
+            return;
+        }
         
         this.isReconnecting = true;
         this.reconnectAttempts++;
@@ -76,18 +79,36 @@ class ReconnectionManager {
         logger.info(`Attempting reconnection ${this.reconnectAttempts}/${config.MAX_RECONNECT_ATTEMPTS} in ${delay}ms`);
 
         this.reconnectTimer = setTimeout(async () => {
+            if (!this.isReconnecting) {
+                logger.info('Reconnection was cancelled, skipping...');
+                return;
+            }
+
             try {
                 logger.info('Attempting to reconnect to Minecraft server...');
-                await createBotFunction();
-                logger.info('Reconnection successful');
+                const bot = await createBotFunction();
+                if (bot) {
+                    logger.info('Reconnection successful');
+                    this.isReconnecting = false;
+                } else {
+                    logger.warn('Reconnection returned null, will try again...');
+                    this.isReconnecting = false;
+                    
+                    // Try again after a longer delay
+                    setTimeout(() => {
+                        this.startReconnection(createBotFunction);
+                    }, config.RECONNECT_DELAY * 2);
+                }
             } catch (error) {
-                logger.error('Reconnection failed:', error);
+                logger.error('Reconnection failed:', error.message || error);
                 this.isReconnecting = false;
                 
                 // Try again with exponential backoff
                 setTimeout(() => {
-                    this.startReconnection(createBotFunction);
-                }, config.RECONNECT_DELAY);
+                    if (this.reconnectAttempts < config.MAX_RECONNECT_ATTEMPTS) {
+                        this.startReconnection(createBotFunction);
+                    }
+                }, config.RECONNECT_DELAY * 1.5);
             }
         }, delay);
     }

@@ -56,6 +56,15 @@ app.get('/api/status', (req, res) => {
     });
 });
 
+// Add missing feedback API endpoint
+app.get('/api/feedback', (req, res) => {
+    res.json({
+        totalFeedback: 0,
+        averageRating: 0,
+        mostCommonType: 'none'
+    });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
     logger.info(`Status web server running on http://0.0.0.0:${PORT}`);
@@ -106,9 +115,18 @@ async function initializeDiscord() {
     }
 }
 
-// Initialize Minecraft bot
+// Initialize Minecraft bot with proper cleanup
 async function initializeMinecraft() {
     try {
+        // Clean up existing connection if any
+        if (minecraftBot && minecraftBot._client && !minecraftBot._client.socket.destroyed) {
+            logger.info('Cleaning up existing connection...');
+            minecraftBot._client.socket.destroy();
+            minecraftBot = null;
+            // Wait for cleanup to complete
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+
         logger.info(`Attempting to connect to Minecraft server: ${config.MINECRAFT_HOST}:${config.MINECRAFT_PORT}`);
         
         minecraftBot = mineflayer.createBot({
@@ -122,31 +140,47 @@ async function initializeMinecraft() {
             checkTimeoutInterval: 60000, // Increase timeout to 60 seconds
             packetTimeout: 30000, // Increase packet timeout
             physicsEnabled: false, // Disable physics to reduce packet processing
-            respawn: true // Auto respawn on death
+            respawn: config.AUTO_RESPAWN // Auto respawn on death
         });
 
         // Add error handlers before other event handlers
         minecraftBot.on('error', (error) => {
-            logger.warn('Minecraft bot error (non-fatal):', error.message);
+            logger.warn('Minecraft bot error (non-fatal):', error.message || error);
             // Don't crash on protocol errors
         });
 
         minecraftBot.on('kicked', (reason) => {
-            logger.warn('Bot was kicked from server:', reason);
+            logger.warn('Bot was kicked from server:', JSON.stringify(reason));
+            // Clear the bot reference to prevent duplicate connections
+            if (minecraftBot) {
+                minecraftBot.removeAllListeners();
+                minecraftBot = null;
+            }
         });
 
         minecraftBot.on('end', (reason) => {
-            logger.info('Connection ended:', reason);
+            logger.info('Connection ended:', reason || 'Unknown reason');
+            logger.info('Bot disconnected:', reason || 'Unknown reason');
         });
 
-        // Load plugins after spawn
+        // Load plugins after spawn with better error handling
         minecraftBot.once('spawn', () => {
             try {
-                minecraftBot.loadPlugin(pathfinder);
-                minecraftBot.loadPlugin(autoeat);
+                // Check if plugins are already loaded to prevent duplicate loading
+                if (!minecraftBot.pathfinder) {
+                    minecraftBot.loadPlugin(pathfinder);
+                }
+                if (!minecraftBot.autoEat) {
+                    minecraftBot.loadPlugin(autoeat);
+                }
                 logger.info('Plugins loaded successfully');
             } catch (pluginError) {
-                logger.warn('Plugin loading error:', pluginError);
+                logger.warn('Plugin loading error:', {
+                    message: pluginError.message,
+                    code: pluginError.code,
+                    actual: pluginError.actual,
+                    expected: pluginError.expected
+                });
             }
         });
 
@@ -160,6 +194,9 @@ async function initializeMinecraft() {
         return minecraftBot;
     } catch (error) {
         logger.error('Failed to initialize Minecraft bot:', error);
+        
+        // Clear the bot reference on failure
+        minecraftBot = null;
         
         // Don't throw error immediately, let reconnection handle it
         if (discordClient && discordClient.isReady() && config.DISCORD_CHANNEL_ID) {

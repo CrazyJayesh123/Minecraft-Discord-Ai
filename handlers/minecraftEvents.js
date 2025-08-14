@@ -420,12 +420,13 @@ function registerEvents(bot, discordClient, aiService) {
     // Entity spawn notifications (for rare mobs)
     bot.on('entitySpawn', (entity) => {
         const rareMobs = ['ender_dragon', 'wither', 'warden', 'elder_guardian', 'shulker'];
+        const entityName = entity.displayName || entity.name || 'unknown';
         
-        if (entity.mobType && rareMobs.includes(entity.mobType.toLowerCase())) {
+        if (rareMobs.some(mob => entityName.toLowerCase().includes(mob))) {
             const entityEmbed = new EmbedBuilder()
                 .setColor('#ff0080')
                 .setTitle('👹 Rare Entity Spotted')
-                .setDescription(`**${entity.displayName || entity.mobType}** spawned nearby!`)
+                .setDescription(`**${entityName}** spawned nearby!`)
                 .addFields(
                     { name: '🌍 Location', value: `${Math.floor(entity.position.x)}, ${Math.floor(entity.position.y)}, ${Math.floor(entity.position.z)}`, inline: true },
                     { name: '📏 Distance', value: `${Math.floor(bot.entity.position.distanceTo(entity.position))} blocks`, inline: true }
@@ -570,15 +571,16 @@ function registerEvents(bot, discordClient, aiService) {
     
     // Combat/damage notifications
     bot.on('attackedTarget', (entity) => {
-        if (entity.mobType) {
-            logger.info(`Bot attacked: ${entity.mobType}`);
+        const entityName = entity.displayName || entity.name;
+        if (entityName) {
+            logger.info(`Bot attacked: ${entityName}`);
             
             const combatEmbed = new EmbedBuilder()
                 .setColor('#ff4500')
                 .setTitle('⚔️ Combat Action')
-                .setDescription(`Bot attacked a **${entity.displayName || entity.mobType}**`)
+                .setDescription(`Bot attacked a **${entityName}**`)
                 .addFields(
-                    { name: '🎯 Target', value: entity.displayName || entity.mobType, inline: true },
+                    { name: '🎯 Target', value: entityName, inline: true },
                     { name: '❤️ Bot Health', value: `${bot.health?.health || 20}/20`, inline: true }
                 )
                 .setTimestamp()

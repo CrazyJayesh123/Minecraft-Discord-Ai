@@ -29,6 +29,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'web', 'status.html'));
 });
 
+// Health check endpoint for Railway deployment
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.get('/api/status', (req, res) => {
     res.json({
         minecraft: {
